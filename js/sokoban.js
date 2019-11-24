@@ -11,7 +11,7 @@ const L = 30
 const rect1 = new Rect(1, W / 2 + L / 2, H / 2 - L / 2, L, L)
 const rect2 = new Rect(2, 150 + L / 2, 120 - L / 2, L, L)
 const rects = []
-rects.push(rect1, rect2)
+rects.push(rect1, rect2,)
 
 
 function playAgain() {
@@ -49,7 +49,8 @@ function playAgain() {
     window.addEventListener("keydown", e => {
         let isTouching = false
         let idRect = 0
-        if (e.key == "ArrowUp") {
+        //tecla "seta para cima" ou tecla "W"
+        if (e.key == "ArrowUp" || e.keyCode == "87") { 
             for (const rect of rects) {
                 for (const rect of rects) {
                     if (xChar == rect.xRect && yChar == rect.yRect + L) {
@@ -66,7 +67,9 @@ function playAgain() {
                     break
                 }
             }
-        } else if (e.key == "ArrowDown") {
+        } 
+        //tecla "seta para baixo" ou tecla "S"
+        else if (e.key == "ArrowDown"|| e.keyCode == "83") { 
             for (const rect of rects) {
                 for (const rect of rects) {
                     if (xChar == rect.xRect && yChar == rect.yRect - L) {
@@ -83,7 +86,9 @@ function playAgain() {
                     break
                 }
             }
-        } else if (e.key == "ArrowLeft") {
+        } 
+        //tecla "seta para esquerda" ou tecla "A"
+        else if (e.key == "ArrowLeft" || e.keyCode == "65") { 
             for (const rect of rects) {
                 for (const rect of rects) {
                     if (xChar - L == rect.xRect && yChar == rect.yRect) {
@@ -100,7 +105,9 @@ function playAgain() {
                     break
                 }
             }
-        } else {
+        } 
+        //tecla "seta para direita" ou tecla "D"
+        else if (e.key == "ArrowRight" || e.keyCode == "68") { 
             for (const rect of rects) {
                 for (const rect of rects) {
                     if (xChar + L == rect.xRect && yChar == rect.yRect) {
@@ -118,9 +125,11 @@ function playAgain() {
                 }
             }
         }
+        //tecla "espaço"
         if (e.keyCode == "32") {
             playAgain()
         }
+        //tecla "ctrl"
         if (e.keyCode == "17") {}
     })
 }
