@@ -9,7 +9,7 @@ const H = canvas.height
 const L = 30
 
 const rect1 = new Rect(1, W / 2 + L / 2, H / 2 - L / 2, L, L)
-const rect2 = new Rect(2, 150 + L / 2, 120 - L / 2, L, L)
+const rect2 = new Rect(2, 165 + L / 2, 135 - L / 2, L, L)
 const rects = []
 rects.push(rect1, rect2,)
 
