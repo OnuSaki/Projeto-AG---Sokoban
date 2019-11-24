@@ -124,13 +124,13 @@ function playAgain() {
                     break
                 }
             }
-        }
+        } 
         //tecla "espaço"
         if (e.keyCode == "32") {
             playAgain()
         }
         //tecla "ctrl"
-        if (e.keyCode == "17") {}
+        if (e.keyCode == "17") {}  
     })
 }
 
