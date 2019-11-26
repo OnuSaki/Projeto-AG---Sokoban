@@ -11,7 +11,7 @@ const L = 30
 const rect1 = new Rect(1, W / 2 + L / 2, H / 2 - L / 2, L, L)
 const rect2 = new Rect(2, 165 + L / 2, 135 - L / 2, L, L)
 const rects = []
-rects.push(rect1, rect2,)
+rects.push(rect1, rect2, )
 
 
 function playAgain() {
@@ -49,79 +49,92 @@ function playAgain() {
     window.addEventListener("keydown", e => {
         let isTouching = false
         let idRect = 0
-        //tecla "seta para cima" ou tecla "W"
-        if (e.key == "ArrowUp" || e.keyCode == "87") { 
-            for (const rect of rects) {
+
+        //Limite Inferior do Canvas
+        if (yChar < 600) {
+            //tecla "seta para baixo" ou tecla "S"
+            if (e.key == "ArrowDown" || e.keyCode == "83") {
                 for (const rect of rects) {
-                    if (xChar == rect.xRect && yChar == rect.yRect + L) {
-                        isTouching = true
-                        idRect = rect.id
+                    for (const rect of rects) {
+                        if (xChar == rect.xRect && yChar == rect.yRect - L) {
+                            isTouching = true
+                            idRect = rect.id
+                        }
                     }
-                }
-                if (isTouching && rect.id == idRect) {
-                    yChar -= L
-                    rect.yRect -= L
-                    break
-                } else if (idRect == 0) {
-                    yChar -= L
-                    break
+                    if (isTouching && rect.id == idRect) {
+                        yChar += L
+                        rect.yRect += L
+                        break
+                    } else if (idRect == 0) {
+                        yChar += L
+                        break
+                    }
                 }
             }
-        } 
-        //tecla "seta para baixo" ou tecla "S"
-        else if (e.key == "ArrowDown"|| e.keyCode == "83") { 
-            for (const rect of rects) {
+        }
+        //Limite Superior do Canvas
+        if (!yChar <= 0) {
+            //tecla "seta para cima" ou tecla "W"
+            if (e.key == "ArrowUp" || e.keyCode == "87") {
                 for (const rect of rects) {
-                    if (xChar == rect.xRect && yChar == rect.yRect - L) {
-                        isTouching = true
-                        idRect = rect.id
+                    for (const rect of rects) {
+                        if (xChar == rect.xRect && yChar == rect.yRect + L) {
+                            isTouching = true
+                            idRect = rect.id
+                        }
                     }
-                }
-                if (isTouching && rect.id == idRect) {
-                    yChar += L
-                    rect.yRect += L
-                    break
-                } else if (idRect == 0) {
-                    yChar += L
-                    break
+                    if (isTouching && rect.id == idRect) {
+                        yChar -= L
+                        rect.yRect -= L
+                        break
+                    } else if (idRect == 0) {
+                        yChar -= L
+                        break
+                    }
                 }
             }
-        } 
-        //tecla "seta para esquerda" ou tecla "A"
-        else if (e.key == "ArrowLeft" || e.keyCode == "65") { 
-            for (const rect of rects) {
+        }
+        //Limite Esquerdo do Canvas
+        if (!((xChar <= 0 && yChar <= 0) || (xChar <= 0 && yChar >= 600) || (xChar <= 0))) {
+            //tecla "seta para esquerda" ou tecla "A"
+            if (e.key == "ArrowLeft" || e.keyCode == "65") {
                 for (const rect of rects) {
-                    if (xChar - L == rect.xRect && yChar == rect.yRect) {
-                        isTouching = true
-                        idRect = rect.id
+                    for (const rect of rects) {
+                        if (xChar - L == rect.xRect && yChar == rect.yRect) {
+                            isTouching = true
+                            idRect = rect.id
+                        }
                     }
-                }
-                if (isTouching && rect.id == idRect) {
-                    xChar -= L
-                    rect.xRect -= L
-                    break
-                } else if (idRect == 0) {
-                    xChar -= L
-                    break
+                    if (isTouching && rect.id == idRect) {
+                        xChar -= L
+                        rect.xRect -= L
+                        break
+                    } else if (idRect == 0) {
+                        xChar -= L
+                        break
+                    }
                 }
             }
-        } 
-        //tecla "seta para direita" ou tecla "D"
-        else if (e.key == "ArrowRight" || e.keyCode == "68") { 
-            for (const rect of rects) {
+        }
+        //Limite Direito do Canvas
+        if (!((xChar >= 600 && yChar <= 0) || (xChar >= 600 && yChar >= 600) || (xChar >= 600))) {
+            //tecla "seta para direita" ou tecla "D"
+            if (e.key == "ArrowRight" || e.keyCode == "68") {
                 for (const rect of rects) {
-                    if (xChar + L == rect.xRect && yChar == rect.yRect) {
-                        isTouching = true
-                        idRect = rect.id
+                    for (const rect of rects) {
+                        if (xChar + L == rect.xRect && yChar == rect.yRect) {
+                            isTouching = true
+                            idRect = rect.id
+                        }
                     }
-                }
-                if (isTouching && rect.id == idRect) {
-                    xChar += L
-                    rect.xRect += L
-                    break
-                } else if (idRect == 0) {
-                    xChar += L
-                    break
+                    if (isTouching && rect.id == idRect) {
+                        xChar += L
+                        rect.xRect += L
+                        break
+                    } else if (idRect == 0) {
+                        xChar += L
+                        break
+                    }
                 }
             }
         }
@@ -131,8 +144,10 @@ function playAgain() {
             playAgain()
         }
         //tecla "ctrl"
-        if (e.keyCode == "17") {}   
-        
+        if (e.keyCode == "17") {}
+
+
+
     })
 }
 
