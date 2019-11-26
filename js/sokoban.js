@@ -144,9 +144,9 @@ function playAgain() {
             playAgain()
         }
         //tecla "ctrl"
-        if (e.keyCode == "17") {}
-
-
+        if (e.keyCode == "17") {
+            
+        }
 
     })
 }
