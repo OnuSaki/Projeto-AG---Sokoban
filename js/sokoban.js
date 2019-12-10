@@ -1,4 +1,6 @@
-import Rect from "../js/class.js"
+import {
+    Box
+} from "../js/class.js"
 
 const canvas = document.querySelector('#canvas')
 const context = canvas.getContext("2d")
@@ -8,38 +10,32 @@ const H = canvas.height
 
 const L = 30
 
-const rect1 = new Rect(1, W / 2 + L / 2, H / 2 - L / 2, L, L)
-const rect2 = new Rect(2, 165 + L / 2, 135 - L / 2, L, L)
-const rects = []
-rects.push(rect1, rect2, )
+const boxes = []
+
+const box1 = new Box(1, "../img/Crates/crate_02.png", W / 2 + L / 2, H / 2 - L / 2, L)
+const box2 = new Box(2, "../img/Crates/crate_02.png", 165 + L / 2, 135 - L / 2, L)
+
+boxes.push(box1, box2)
+
+let char = new Image()
+char.src = "../img/Player/player_11.png"
 
 
 function playAgain() {
     let xChar = W / 2 - 15
     let yChar = H / 2 - 15
 
-    let xRect = W / 2 + 15
-    let yRect = H / 2 - 15
-
     function animate() {
-        context.clearRect(0, 0, W, H);
-
         context.beginPath();
         context.fillStyle = 'white'
-        context.fillRect(0, 0, canvas.width, canvas.height);
-        context.closePath();
+        context.fillRect(0, 0, canvas.width, canvas.height)
 
-        context.beginPath();
-        context.fillStyle = 'blue';
-        context.fill();
-        context.closePath();
-        context.fillRect(xChar, yChar, L, L);
+        context.drawImage(char, xChar, yChar, L, L);
 
-        for (const rect of rects) {
-            context.beginPath();
-            context.fillStyle = 'black';
-            context.fillRect(rect.xRect, rect.yRect, rect.L1, rect.L2);
-            context.closePath();
+        for (const box of boxes) {
+            let boxImg = new Image()
+            boxImg.src = box.boxType
+            context.drawImage(boxImg, box.xBox, box.yBox, box.L, box.L);
         }
 
         window.requestAnimationFrame(animate)
@@ -48,24 +44,24 @@ function playAgain() {
 
     window.addEventListener("keydown", e => {
         let isTouching = false
-        let idRect = 0
+        let idBox = 0
 
         //Limite Inferior do Canvas
         if (yChar < 600) {
             //tecla "seta para baixo" ou tecla "S"
             if (e.key == "ArrowDown" || e.keyCode == "83") {
-                for (const rect of rects) {
-                    for (const rect of rects) {
-                        if (xChar == rect.xRect && yChar == rect.yRect - L) {
+                for (const box of boxes) {
+                    for (const box of boxes) {
+                        if (xChar == box.xBox && yChar == box.yBox - L) {
                             isTouching = true
-                            idRect = rect.id
+                            idBox = box.id
                         }
                     }
-                    if (isTouching && rect.id == idRect) {
+                    if (isTouching && box.id == idBox) {
                         yChar += L
-                        rect.yRect += L
+                        box.yBox += L
                         break
-                    } else if (idRect == 0) {
+                    } else if (idBox == 0) {
                         yChar += L
                         break
                     }
@@ -76,18 +72,18 @@ function playAgain() {
         if (!yChar <= 0) {
             //tecla "seta para cima" ou tecla "W"
             if (e.key == "ArrowUp" || e.keyCode == "87") {
-                for (const rect of rects) {
-                    for (const rect of rects) {
-                        if (xChar == rect.xRect && yChar == rect.yRect + L) {
+                for (const box of boxes) {
+                    for (const box of boxes) {
+                        if (xChar == box.xBox && yChar == box.yBox + L) {
                             isTouching = true
-                            idRect = rect.id
+                            idBox = box.id
                         }
                     }
-                    if (isTouching && rect.id == idRect) {
+                    if (isTouching && box.id == idBox) {
                         yChar -= L
-                        rect.yRect -= L
+                        box.yBox -= L
                         break
-                    } else if (idRect == 0) {
+                    } else if (idBox == 0) {
                         yChar -= L
                         break
                     }
@@ -98,18 +94,18 @@ function playAgain() {
         if (!((xChar <= 0 && yChar <= 0) || (xChar <= 0 && yChar >= 600) || (xChar <= 0))) {
             //tecla "seta para esquerda" ou tecla "A"
             if (e.key == "ArrowLeft" || e.keyCode == "65") {
-                for (const rect of rects) {
-                    for (const rect of rects) {
-                        if (xChar - L == rect.xRect && yChar == rect.yRect) {
+                for (const box of boxes) {
+                    for (const box of boxes) {
+                        if (xChar - L == box.xBox && yChar == box.yBox) {
                             isTouching = true
-                            idRect = rect.id
+                            idBox = box.id
                         }
                     }
-                    if (isTouching && rect.id == idRect) {
+                    if (isTouching && box.id == idBox) {
                         xChar -= L
-                        rect.xRect -= L
+                        box.xBox -= L
                         break
-                    } else if (idRect == 0) {
+                    } else if (idBox == 0) {
                         xChar -= L
                         break
                     }
@@ -120,18 +116,18 @@ function playAgain() {
         if (!((xChar >= 600 && yChar <= 0) || (xChar >= 600 && yChar >= 600) || (xChar >= 600))) {
             //tecla "seta para direita" ou tecla "D"
             if (e.key == "ArrowRight" || e.keyCode == "68") {
-                for (const rect of rects) {
-                    for (const rect of rects) {
-                        if (xChar + L == rect.xRect && yChar == rect.yRect) {
+                for (const box of boxes) {
+                    for (const box of boxes) {
+                        if (xChar + L == box.xBox && yChar == box.yBox) {
                             isTouching = true
-                            idRect = rect.id
+                            idBox = box.id
                         }
                     }
-                    if (isTouching && rect.id == idRect) {
+                    if (isTouching && box.id == idBox) {
                         xChar += L
-                        rect.xRect += L
+                        box.xBox += L
                         break
-                    } else if (idRect == 0) {
+                    } else if (idBox == 0) {
                         xChar += L
                         break
                     }
@@ -145,7 +141,7 @@ function playAgain() {
         }
         //tecla "ctrl"
         if (e.keyCode == "17") {
-            
+
         }
 
     })
