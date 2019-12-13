@@ -9,8 +9,9 @@ export class Box {
 }
 
 export class Spot {
-    constructor(id, xSpot, ySpot) {
+    constructor(id, spotType, xSpot, ySpot) {
         this.id = id
+        this.spotType = spotType
         this.xSpot = xSpot
         this.ySpot = ySpot
     }

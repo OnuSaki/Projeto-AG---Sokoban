@@ -12,8 +12,8 @@ const L = 30
 
 const boxes = []
 
-const box1 = new Box(1, "../img/Crates/crate_02.png", W / 2 + L / 2, H / 2 - L / 2, L)
-const box2 = new Box(2, "../img/Crates/crate_02.png", 165 + L / 2, 135 - L / 2, L)
+const box1 = new Box(1, "../img/Crates/crate_42.png", W / 2 + L / 2, H / 2 - L / 2, L)
+const box2 = new Box(2, "../img/Crates/crate_42.png", 165 + L / 2, 135 - L / 2, L)
 
 boxes.push(box1, box2)
 
@@ -51,10 +51,17 @@ function playAgain() {
             //tecla "seta para baixo" ou tecla "S"
             if (e.key == "ArrowDown" || e.keyCode == "83") {
                 for (const box of boxes) {
-                    for (const box of boxes) {
-                        if (xChar == box.xBox && yChar == box.yBox - L) {
+                    for (let i = 0; i < boxes.length; i++) {
+                        for (let j = i + 1; j < boxes.length; j++) {
+                            if ((boxes[i].xBox == boxes[j].xBox) && (boxes[i].yBox + L == boxes[j].yBox)) {
+                                console.log('ola')
+                            }
+                        }
+                    }
+                    for (let i = 0; i < boxes.length; i++) {
+                        if (xChar == boxes[i].xBox && yChar == boxes[i].yBox - L) {
                             isTouching = true
-                            idBox = box.id
+                            idBox = boxes[i].id
                         }
                     }
                     if (isTouching && box.id == idBox) {
@@ -73,6 +80,13 @@ function playAgain() {
             //tecla "seta para cima" ou tecla "W"
             if (e.key == "ArrowUp" || e.keyCode == "87") {
                 for (const box of boxes) {
+                    for (let i = 0; i < boxes.length; i++) {
+                        for (let j = i + 1; j < boxes.length; j++) {
+                            if ((boxes[i].xBox == boxes[j].xBox) && (boxes[i].yBox == boxes[j].yBox + L)) {
+                                console.log('ola')
+                            }
+                        }
+                    }
                     for (const box of boxes) {
                         if (xChar == box.xBox && yChar == box.yBox + L) {
                             isTouching = true
@@ -95,6 +109,13 @@ function playAgain() {
             //tecla "seta para esquerda" ou tecla "A"
             if (e.key == "ArrowLeft" || e.keyCode == "65") {
                 for (const box of boxes) {
+                    for (let i = 0; i < boxes.length; i++) {
+                        for (let j = i + 1; j < boxes.length; j++) {
+                            if ((boxes[i].xBox == boxes[j].xBox + L) && (boxes[i].yBox == boxes[j].yBox)) {
+                                console.log('ola')
+                            }
+                        }
+                    }
                     for (const box of boxes) {
                         if (xChar - L == box.xBox && yChar == box.yBox) {
                             isTouching = true
@@ -117,6 +138,13 @@ function playAgain() {
             //tecla "seta para direita" ou tecla "D"
             if (e.key == "ArrowRight" || e.keyCode == "68") {
                 for (const box of boxes) {
+                    for (let i = 0; i < boxes.length; i++) {
+                        for (let j = i + 1; j < boxes.length; j++) {
+                            if ((boxes[i].xBox + L == boxes[j].xBox) && (boxes[i].yBox == boxes[j].yBox)) {
+                                console.log('ola')
+                            }
+                        }
+                    }
                     for (const box of boxes) {
                         if (xChar + L == box.xBox && yChar == box.yBox) {
                             isTouching = true
