@@ -171,7 +171,18 @@ function playAgain() {
         if (e.keyCode == "17") {
 
         }
-
+        if (e.key == "ArrowLeft" || e.keyCode == "65") {
+            char.src = "../img/Player/player_14.png"
+        }
+        if (e.key == "ArrowRight" || e.keyCode == "68") {
+            char.src = "../img/Player/player_11.png"
+        }
+        if (e.key == "ArrowUp" || e.keyCode == "87") {
+            char.src = "../img/Player/player_08.png"
+        }
+        if (e.key == "ArrowDown" || e.keyCode == "83") {
+            char.src = "../img/Player/player_05.png"
+        }
     })
 }
 
