@@ -1,6 +1,9 @@
 import {
-    Box
+    Box,
+    Spot
 } from "../js/class.js"
+
+import maps from "../js/maps.js"
 
 const canvas = document.querySelector('#canvas')
 const context = canvas.getContext("2d")
@@ -8,35 +11,54 @@ const context = canvas.getContext("2d")
 const W = canvas.width
 const H = canvas.height
 
-const L = 30
+const L = 60
 
 const boxes = []
+// createBoxes()
 
-const box1 = new Box(1, "../img/Crates/crate_42.png", W / 2 + L / 2, H / 2 - L / 2, L)
-const box2 = new Box(2, "../img/Crates/crate_42.png", 165 + L / 2, 135 - L / 2, L)
+const spots = []
+// createSpots()
 
-boxes.push(box1, box2)
+const spriteRight = "../img/Player/player_14.png"
+const spriteLeft = "../img/Player/player_11.png"
+const spriteUp = "../img/Player/player_02.png"
+const spriteDown = "../img/Player/player_01.png"
+
 
 let char = new Image()
 char.src = "../img/Player/player_11.png"
 
+let sprite = new Image()
+const ground = "../img/Ground/ground_01.png"
+const wall = "../img/Blocks/block_02.png"
+const spot = "../img/Crates/crate_27.png"
+
+
 
 function playAgain() {
-    let xChar = W / 2 - 15
-    let yChar = H / 2 - 15
+    let xChar = W / 2 - 30
+    let yChar = H / 2 - 30
 
     function animate() {
         context.beginPath();
         context.fillStyle = 'white'
         context.fillRect(0, 0, canvas.width, canvas.height)
 
-        context.drawImage(char, xChar, yChar, L, L);
+        spawnMaps()
 
-        for (const box of boxes) {
-            let boxImg = new Image()
-            boxImg.src = box.boxType
-            context.drawImage(boxImg, box.xBox, box.yBox, box.L, box.L);
-        }
+        // for (const spot of spots) {
+        //     let spotImg = new Image()
+        //     spotImg.src = spot.spotType
+        //     context.drawImage(spotImg, spot.xSpot, spot.ySpot, L, L);
+        // }
+
+        // for (const box of boxes) {
+        //     let boxImg = new Image()
+        //     boxImg.src = box.boxType
+        //     context.drawImage(boxImg, box.xBox, box.yBox, box.L, box.L);
+        // }
+
+        context.drawImage(char, xChar, yChar, L, L);
 
         window.requestAnimationFrame(animate)
     }
@@ -64,7 +86,7 @@ function playAgain() {
                             idBox = boxes[i].id
                         }
                     }
-                    if (isTouching && box.id == idBox) {
+                    if (isTouching && box.id == idBox && box.canMove == true) {
                         yChar += L
                         box.yBox += L
                         break
@@ -93,7 +115,7 @@ function playAgain() {
                             idBox = box.id
                         }
                     }
-                    if (isTouching && box.id == idBox) {
+                    if (isTouching && box.id == idBox && box.canMove == true) {
                         yChar -= L
                         box.yBox -= L
                         break
@@ -122,7 +144,7 @@ function playAgain() {
                             idBox = box.id
                         }
                     }
-                    if (isTouching && box.id == idBox) {
+                    if (isTouching && box.id == idBox && box.canMove == true) {
                         xChar -= L
                         box.xBox -= L
                         break
@@ -151,7 +173,7 @@ function playAgain() {
                             idBox = box.id
                         }
                     }
-                    if (isTouching && box.id == idBox) {
+                    if (isTouching && box.id == idBox && box.canMove == true) {
                         xChar += L
                         box.xBox += L
                         break
@@ -172,18 +194,70 @@ function playAgain() {
 
         }
         if (e.key == "ArrowLeft" || e.keyCode == "65") {
-            char.src = "../img/Player/player_14.png"
+            char.src = spriteRight
         }
         if (e.key == "ArrowRight" || e.keyCode == "68") {
-            char.src = "../img/Player/player_11.png"
+            char.src = spriteLeft
         }
         if (e.key == "ArrowUp" || e.keyCode == "87") {
-            char.src = "../img/Player/player_08.png"
+            char.src = spriteUp
         }
         if (e.key == "ArrowDown" || e.keyCode == "83") {
-            char.src = "../img/Player/player_05.png"
+            char.src = spriteDown
         }
     })
 }
 
 playAgain()
+
+function createBoxes() {
+    const normalBox = "../img/Crates/crate_02.png"
+    const redBox = "../img/Crates/crate_03.png"
+    const blueBox = "../img/Crates/crate_04.png"
+    const greenBox = "../img/Crates/crate_05.png"
+    const metalBox = "../img/Crates/crate_06.png"
+
+    const box1 = new Box(1, normalBox, W / 2 + L / 2, H / 2 - L / 2, L, true)
+    const box2 = new Box(2, normalBox, 180, 120, L, true)
+
+    boxes.push(box1, box2)
+}
+
+function createSpots() {
+    const spotNormalBox = "../img/Crates/crate_27.png"
+
+    const spot1 = new Spot(1, spotNormalBox, 210, 240)
+
+    spots.push(spot1)
+}
+
+function spawnMaps() {
+    for (const map of maps) {
+        context.translate(W / 2 - map.map.length / 2, H / 2 - map.map.length / 2);
+        if (map.level == 1) {
+            for (let i = 0; i < map.map.length; i++) {
+                for (let j = 0; j < map.map.length; j++) {
+                    if (map.map[i][j] == 0) {                       
+                        sprite = new Image()
+                        sprite.src = ground
+                        context.drawImage(sprite, L * j, L * i, L, L);
+                    }
+                    if (map.map[i][j] == 1) {
+                        sprite = new Image()
+                        sprite.src = wall
+                        context.drawImage(sprite, L * j, L * i, L, L);
+                    }
+                    if (map.map[i][j] == 2) {
+                        sprite = new Image()
+                        sprite.src = ground
+                        context.drawImage(sprite, L * j, L * i, L, L);
+                        sprite = new Image()
+                        sprite.src = spot
+                        context.drawImage(sprite, L * j, L * i, L, L);
+                    }
+                }
+            }
+        }
+        context.restore();
+    }
+}
