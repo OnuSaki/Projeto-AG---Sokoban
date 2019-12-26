@@ -9,12 +9,3 @@ export class Box {
         this.canMove = canMove
     }
 }
-
-export class Spot {
-    constructor(id, spotType, xSpot, ySpot) {
-        this.id = id
-        this.spotType = spotType
-        this.xSpot = xSpot
-        this.ySpot = ySpot
-    }
-}

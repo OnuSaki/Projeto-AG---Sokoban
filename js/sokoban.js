@@ -1,6 +1,5 @@
 import {
-    Box,
-    Spot
+    Box
 } from "../js/class.js"
 
 import maps from "../js/maps.js"
@@ -16,13 +15,19 @@ const H = canvas.height
 //* Tamanho de todos 
 const L = 60
 
+//* Tipos de caixas possíveis
+const normalBox = "../img/Crates/crate_02.png"
+const redBox = "../img/Crates/crate_03.png"
+const blueBox = "../img/Crates/crate_04.png"
+const greenBox = "../img/Crates/crate_05.png"
+const metalBox = "../img/Crates/crate_06.png"
+
+//* Caixas quando se encontram no spot
+const normalBoxOnSpot = "../img/Crates/crate_12.png"
+
 //* Array com todas as caixas
 const boxes = []
 createBoxes()
-
-//* Array com todos os spots
-const spots = []
-// createSpots()
 
 //* Inicialização de todos os sprites do jogador
 const spriteRight = "../img/Player/player_14.png"
@@ -58,17 +63,11 @@ function playAgain() {
     function animate() {
         //* Limpar o canvas
         context.beginPath();
-        context.fillStyle = 'white'
+        context.fillStyle = 'black'
         context.fillRect(0, 0, canvas.width, canvas.height)
 
         //* Desenhar o mapa
         spawnMaps(level - 1)
-
-        // for (const spot of spots) {
-        //     let spotImg = new Image()
-        //     spotImg.src = spot.spotType
-        //     context.drawImage(spotImg, spot.xSpot, spot.ySpot, L, L);
-        // }
 
         for (const box of boxes) {
             let boxImg = new Image()
@@ -88,28 +87,31 @@ function playAgain() {
         let isTouching = false
         let idBox = 0
 
+        //* Obter posições no array onde se encontra o player
+        let xCharPos = xChar / 60
+        let yCharPos = yChar / 60
+
         //Limite Inferior do Canvas
         if (yChar < 600) {
             //tecla "seta para baixo" ou tecla "S"
             if (e.key == "ArrowDown" || e.keyCode == "83") {
                 for (const box of boxes) {
-                    for (let i = 0; i < boxes.length; i++) {
-                        if (xChar == boxes[i].xBox && yChar == boxes[i].yBox - L) {
+                    for (const box of boxes) {
+                        if (xChar == box.xBox && yChar == box.yBox - L) {
                             isTouching = true
-                            idBox = boxes[i].id
+                            idBox = box.id
+                            break
                         }
                     }
-                    //* Obter posições no array onde se encontra o player
-                    let xCharPos = xChar / 60
-                    let yCharPos = yChar / 60
                     //* Verificação se no caminho do player se encontra parede
                     if (maps[level - 1].map[yCharPos + 1][xCharPos] != 1) {
-                        if (isTouching && box.id == idBox && box.canMove == true) {
+                        if (isTouching && box.id == idBox && boxesColision(box.xBox, box.yBox + L)) {
                             let xBoxPos = box.xBox / 60
                             let yBoxPos = box.yBox / 60
                             if (maps[level - 1].map[yBoxPos + 1][xBoxPos] != 1) {
                                 yChar += L
                                 box.yBox += L
+                                checkBoxesOnSpots(idBox, xBoxPos, yBoxPos + 1)
                                 break
                             }
                         } else if (idBox == 0) {
@@ -129,18 +131,17 @@ function playAgain() {
                         if (xChar == box.xBox && yChar == box.yBox + L) {
                             isTouching = true
                             idBox = box.id
+                            break
                         }
                     }
-
-                    let xCharPos = xChar / 60
-                    let yCharPos = yChar / 60
                     if (maps[level - 1].map[yCharPos - 1][xCharPos] != 1) {
-                        if (isTouching && box.id == idBox && box.canMove == true) {
+                        if (isTouching && box.id == idBox && boxesColision(box.xBox, box.yBox - L)) {
                             let xBoxPos = box.xBox / 60
                             let yBoxPos = box.yBox / 60
                             if (maps[level - 1].map[yBoxPos - 1][xBoxPos] != 1) {
                                 yChar -= L
                                 box.yBox -= L
+                                checkBoxesOnSpots(idBox, xBoxPos, yBoxPos - 1)
                                 break
                             }
                         } else if (idBox == 0) {
@@ -160,17 +161,17 @@ function playAgain() {
                         if (xChar - L == box.xBox && yChar == box.yBox) {
                             isTouching = true
                             idBox = box.id
+                            break
                         }
                     }
-                    let xCharPos = xChar / 60
-                    let yCharPos = yChar / 60
                     if (maps[level - 1].map[yCharPos][xCharPos - 1] != 1) {
-                        if (isTouching && box.id == idBox && box.canMove == true) {
+                        if (isTouching && box.id == idBox && boxesColision(box.xBox - L, box.yBox)) {
                             let xBoxPos = box.xBox / 60
                             let yBoxPos = box.yBox / 60
                             if (maps[level - 1].map[yBoxPos][xBoxPos - 1] != 1) {
                                 xChar -= L
                                 box.xBox -= L
+                                checkBoxesOnSpots(idBox, xBoxPos - 1, yBoxPos)
                                 break
                             }
                         } else if (idBox == 0) {
@@ -190,17 +191,17 @@ function playAgain() {
                         if (xChar + L == box.xBox && yChar == box.yBox) {
                             isTouching = true
                             idBox = box.id
+                            break
                         }
                     }
-                    let xCharPos = xChar / 60
-                    let yCharPos = yChar / 60
                     if (maps[level - 1].map[yCharPos][xCharPos + 1] != 1) {
-                        if (isTouching && box.id == idBox && box.canMove == true) {
+                        if (isTouching && box.id == idBox && boxesColision(box.xBox + L, box.yBox)) {
                             let xBoxPos = box.xBox / 60
                             let yBoxPos = box.yBox / 60
                             if (maps[level - 1].map[yBoxPos][xBoxPos + 1] != 1) {
                                 xChar += L
                                 box.xBox += L
+                                checkBoxesOnSpots(idBox, xBoxPos + 1, yBoxPos)
                                 break
                             }
                         } else if (idBox == 0) {
@@ -237,13 +238,10 @@ function playAgain() {
 
 playAgain()
 
+/**
+ *? Criação de caixas
+ */
 function createBoxes() {
-    const normalBox = "../img/Crates/crate_02.png"
-    const redBox = "../img/Crates/crate_03.png"
-    const blueBox = "../img/Crates/crate_04.png"
-    const greenBox = "../img/Crates/crate_05.png"
-    const metalBox = "../img/Crates/crate_06.png"
-
     //* Boxes nível 1
     const box1 = new Box(1, 1, normalBox, 2 * 60, 4 * 60, L, true)
     const box2 = new Box(2, 1, normalBox, 4 * 60, 2 * 60, L, true)
@@ -251,14 +249,10 @@ function createBoxes() {
     boxes.push(box1, box2)
 }
 
-function createSpots() {
-    const spotNormalBox = "../img/Crates/crate_27.png"
-
-    const spot1 = new Spot(1, spotNormalBox, 210, 240)
-
-    spots.push(spot1)
-}
-
+/**
+ * ? "Desenhar" os mapas
+ * @param {number} level 
+ */
 function spawnMaps(level) {
     for (let i = 0; i < maps[level].map.length; i++) {
         for (let j = 0; j < maps[level].map.length; j++) {
@@ -279,6 +273,39 @@ function spawnMaps(level) {
                 sprite = new Image()
                 sprite.src = spot
                 context.drawImage(sprite, L * j, L * i, L, L);
+            }
+        }
+    }
+}
+
+/**
+ * ? Verificação se duas caixas estão em colisão
+ * @param {number} x 
+ * @param {number} y 
+ */
+function boxesColision(x, y) {
+    for (const box of boxes) {
+        if (box.xBox == x && box.yBox == y) {
+            return false
+        }
+    }
+    return true
+}
+
+/**
+ * ? Verificação se as caixas se encontram nos spots
+ * TODO: FAZER VERIFICAÇÃO SE TODAS JÁ ESTÃO NO SPOT
+ * @param {number} boxId 
+ * @param {number} x 
+ * @param {number} y 
+ */
+function checkBoxesOnSpots(boxId, x, y) {
+    for (const box of boxes) {
+        if (box.id == boxId) {
+            if (maps[level - 1].map[y][x] === 2) {
+                box.boxType = normalBoxOnSpot
+            } else {
+                box.boxType = normalBox
             }
         }
     }
