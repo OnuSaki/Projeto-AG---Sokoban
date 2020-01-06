@@ -326,7 +326,7 @@ function checkBoxesOnSpots(boxId, x, y) {
                 }
             }
             if (box.boxType == blueBox || box.boxType == blueBoxOnSpot) {
-                if (maps[level - 1].map[y][x] === 3) {
+                if (maps[level - 1].map[y][x] === 6) {
                     if (box.onSpot == false) {
                         nBoxesOnSpot++
                     }
@@ -350,6 +350,7 @@ function checkBoxesOnSpots(boxId, x, y) {
 //TODO: FAZER ANIMAÇÃO PARA DEMONSTRAR QUE O UTILIZADOR PASSOU DE NÍVEL
 function levelPassed() {
     level++
+    alert("Parabéns, completou o nível!!!")
     playAgain()
 }
 
