@@ -12,6 +12,9 @@ const context = canvas.getContext("2d")
 let W = canvas.width
 let H = canvas.height
 
+const offScreenCanvas = document.createElement('canvas')
+const offCanvas = offScreenCanvas.getContext("2d")
+
 //* Tamanho de todos 
 const L = 50
 
@@ -60,6 +63,9 @@ function playAgain() {
     canvas.width = maps[level - 1].map[0].length * 50
     canvas.height = maps[level - 1].map.length * 50
 
+    offScreenCanvas.width = maps[level - 1].map[0].length * 50
+    offScreenCanvas.height = maps[level - 1].map.length * 50
+
     W = canvas.width
     H = canvas.height
 
@@ -71,6 +77,7 @@ function playAgain() {
     function animate() {
         //* Limpar o canvas
         context.clearRect(0, 0, W, H);
+        offCanvas.clearRect(0, 0, W, H);
 
         //* Desenhar o mapa
         spawnMaps(level - 1)
@@ -79,12 +86,15 @@ function playAgain() {
             if (box.level == level) {
                 let boxImg = new Image()
                 boxImg.src = box.boxType
-                context.drawImage(boxImg, box.xBox, box.yBox, box.L, box.L);
+                offCanvas.drawImage(boxImg, box.xBox, box.yBox, box.L, box.L);
             }
         }
 
         //* Desenhar o char
-        context.drawImage(char, xChar, yChar, L, L);
+        offCanvas.drawImage(char, xChar, yChar, L, L);
+
+        let image = offCanvas.getImageData(0, 0, W, H)
+        context.putImageData(image, 0, 0);
 
         window.requestAnimationFrame(animate)
     }
@@ -92,8 +102,6 @@ function playAgain() {
 
     //* Eventos de deteção do movimento do jogador
     window.addEventListener("keydown", e => {
-        console.log(level);
-
         let isTouching = false
         let idBox = 0
 
@@ -250,28 +258,28 @@ function spawnMaps(level) {
             if (maps[level].map[i][j] == 0) {
                 sprite = new Image()
                 sprite.src = ground
-                context.drawImage(sprite, L * j, L * i, L, L);
+                offCanvas.drawImage(sprite, L * j, L * i, L, L);
             }
             if (maps[level].map[i][j] == 1) {
                 sprite = new Image()
                 sprite.src = wall
-                context.drawImage(sprite, L * j, L * i, L, L);
+                offCanvas.drawImage(sprite, L * j, L * i, L, L);
             }
             if (maps[level].map[i][j] == 2) {
                 sprite = new Image()
                 sprite.src = ground
-                context.drawImage(sprite, L * j, L * i, L, L);
+                offCanvas.drawImage(sprite, L * j, L * i, L, L);
                 sprite = new Image()
                 sprite.src = spotNormal
-                context.drawImage(sprite, L * j, L * i, L, L);
+                offCanvas.drawImage(sprite, L * j, L * i, L, L);
             }
             if (maps[level].map[i][j] == 3) {
                 sprite = new Image()
                 sprite.src = ground
-                context.drawImage(sprite, L * j, L * i, L, L);
+                offCanvas.drawImage(sprite, L * j, L * i, L, L);
                 sprite = new Image()
                 sprite.src = spotBlue
-                context.drawImage(sprite, L * j, L * i, L, L);
+                offCanvas.drawImage(sprite, L * j, L * i, L, L);
             }
         }
     }
