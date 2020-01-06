@@ -34,13 +34,22 @@ let boxes = []
 createBoxes()
 
 //* Inicialização de todos os sprites do jogador
-const spriteRight = "../img/Player/player_14.png"
-const spriteLeft = "../img/Player/player_11.png"
-const spriteUp = "../img/Player/player_02.png"
-const spriteDown = "../img/Player/player_01.png"
+// const spriteRight = "../img/Player/player_14.png"
+// const spriteLeft = "../img/Player/player_11.png"
+// const spriteUp = "../img/Player/player_02.png"
+// const spriteDown = "../img/Player/player_01.png"
 
 let char = new Image()
-char.src = spriteLeft
+char.src = "../img/sprites_player.png"
+let dir = 0
+let pos = 0
+// let moving = false
+// let posMov = 1
+// let dirMov = ""
+// let idBoxMov = 0
+// let outOfBounds = true
+
+let unableToPress = false
 
 //* Incialização dos sprites 
 let sprite = new Image()
@@ -52,7 +61,13 @@ const spotNormal = "../img/Crates/crate_27.png"
 const spotBlue = "../img/Crates/crate_29.png"
 
 //* Nível
-let level = 1
+let level = 0
+if (sessionStorage.getItem("level")) {
+    level = sessionStorage.getItem("level")
+} else {
+    level = 1
+}
+
 
 //* Número de caixas no spot
 let nBoxesOnSpot = 0
@@ -91,7 +106,8 @@ function playAgain() {
         }
 
         //* Desenhar o char
-        offCanvas.drawImage(char, xChar, yChar, L, L);
+        offCanvas.drawImage(char, pos * L, dir * L, L, L, xChar, yChar, L, L);
+        //playerMovement(dirMov, idBoxMov, outOfBounds)
 
         let image = offCanvas.getImageData(0, 0, W, H)
         context.putImageData(image, 0, 0);
@@ -109,141 +125,253 @@ function playAgain() {
         let xCharPos = xChar / 50
         let yCharPos = yChar / 50
 
-        //tecla "seta para baixo" ou tecla "S"
-        if (e.key == "ArrowDown" || e.keyCode == "83") {
-            for (const box of boxes) {
-                for (const box of boxes) {
-                    if (xChar == box.xBox && yChar == box.yBox - L && box.level == level) {
-                        isTouching = true
-                        idBox = box.id
-                        break
-                    }
-                }
-                //* Verificação se no caminho do player se encontra parede
-                if (maps[level - 1].map[yCharPos + 1][xCharPos] != 1) {
-                    if (isTouching && box.id == idBox && boxesColision(box.xBox, box.yBox + L)) {
-                        let xBoxPos = box.xBox / 50
-                        let yBoxPos = box.yBox / 50
-                        if (maps[level - 1].map[yBoxPos + 1][xBoxPos] != 1) {
-                            yChar += L
-                            box.yBox += L
-                            checkBoxesOnSpots(idBox, xBoxPos, yBoxPos + 1)
-                            break
-                        }
-                    } else if (idBox == 0) {
-                        yChar += L
-                        break
-                    }
-                }
-            }
-        }
 
-        //tecla "seta para cima" ou tecla "W"
-        if (e.key == "ArrowUp" || e.keyCode == "87") {
-            for (const box of boxes) {
+        if (unableToPress == false) {
+            //tecla "seta para baixo" ou tecla "S"
+            if (e.key == "ArrowDown" || e.keyCode == "83") {
                 for (const box of boxes) {
-                    if (xChar == box.xBox && yChar == box.yBox + L && box.level == level) {
-                        isTouching = true
-                        idBox = box.id
-                        break
-                    }
-                }
-                if (maps[level - 1].map[yCharPos - 1][xCharPos] != 1) {
-                    if (isTouching && box.id == idBox && boxesColision(box.xBox, box.yBox - L)) {
-                        let xBoxPos = box.xBox / 50
-                        let yBoxPos = box.yBox / 50
-                        if (maps[level - 1].map[yBoxPos - 1][xBoxPos] != 1) {
-                            yChar -= L
-                            box.yBox -= L
-                            checkBoxesOnSpots(idBox, xBoxPos, yBoxPos - 1)
-                            break
-                        }
-                    } else if (idBox == 0) {
-                        yChar -= L
-                        break
-                    }
-                }
-            }
-        }
-
-        //tecla "seta para esquerda" ou tecla "A"
-        if (e.key == "ArrowLeft" || e.keyCode == "65") {
-            for (const box of boxes) {
-                for (const box of boxes) {
-                    if (box.level == level) {
-                        if (xChar - L == box.xBox && yChar == box.yBox && box.level == level) {
+                    for (const box of boxes) {
+                        if (xChar == box.xBox && yChar == box.yBox - L && box.level === level) {
                             isTouching = true
                             idBox = box.id
                             break
                         }
                     }
-                }
-                if (maps[level - 1].map[yCharPos][xCharPos - 1] != 1) {
-                    if (isTouching && box.id == idBox && boxesColision(box.xBox - L, box.yBox)) {
-                        let xBoxPos = box.xBox / 50
-                        let yBoxPos = box.yBox / 50
-                        if (maps[level - 1].map[yBoxPos][xBoxPos - 1] != 1) {
-                            xChar -= L
-                            box.xBox -= L
-                            checkBoxesOnSpots(idBox, xBoxPos - 1, yBoxPos)
+                    //* Verificação se no caminho do player se encontra parede
+                    if (maps[level - 1].map[yCharPos + 1][xCharPos] != 1) {
+                        if (isTouching && box.id == idBox && boxesColision(box.xBox, box.yBox + L)) {
+                            let xBoxPos = box.xBox / 50
+                            let yBoxPos = box.yBox / 50
+                            if (maps[level - 1].map[yBoxPos + 1][xBoxPos] != 1) {
+                                // moving = true
+                                // dirMov = "down"
+                                // idBoxMov = idBox
+                                // outOfBounds = false
+                                // unableToPress = true
+                                yChar += L
+                                box.yBox += L
+                                checkBoxesOnSpots(idBox, xBoxPos, yBoxPos + 1)
+                                break
+                            }
+                            break
+                        } else if (idBox == 0) {
+                            // moving = true
+                            // dirMov = "down"
+                            // idBoxMov = idBox
+                            // outOfBounds = false
+                            // unableToPress = true
+                            yChar += L
                             break
                         }
-                    } else if (idBox == 0) {
-                        xChar -= L
-                        break
                     }
                 }
+                dir = 0
+                pos = 0
             }
-        }
 
-        //tecla "seta para direita" ou tecla "D"
-        if (e.key == "ArrowRight" || e.keyCode == "68") {
-            for (const box of boxes) {
+            //tecla "seta para cima" ou tecla "W"
+            if (e.key == "ArrowUp" || e.keyCode == "87") {
                 for (const box of boxes) {
-                    if (xChar + L == box.xBox && yChar == box.yBox && box.level == level) {
-                        isTouching = true
-                        idBox = box.id
-                        break
-                    }
-                }
-                if (maps[level - 1].map[yCharPos][xCharPos + 1] != 1) {
-                    if (isTouching && box.id == idBox && boxesColision(box.xBox + L, box.yBox)) {
-                        let xBoxPos = box.xBox / 50
-                        let yBoxPos = box.yBox / 50
-                        if (maps[level - 1].map[yBoxPos][xBoxPos + 1] != 1) {
-                            xChar += L
-                            box.xBox += L
-                            checkBoxesOnSpots(idBox, xBoxPos + 1, yBoxPos)
+                    for (const box of boxes) {
+                        if (xChar == box.xBox && yChar == box.yBox + L && box.level === level) {
+                            isTouching = true
+                            idBox = box.id
                             break
                         }
-                    } else if (idBox == 0) {
-                        xChar += L
-                        break
+                    }
+                    if (maps[level - 1].map[yCharPos - 1][xCharPos] != 1) {
+                        if (isTouching && box.id == idBox && boxesColision(box.xBox, box.yBox - L)) {
+                            let xBoxPos = box.xBox / 50
+                            let yBoxPos = box.yBox / 50
+                            if (maps[level - 1].map[yBoxPos - 1][xBoxPos] != 1) {
+                                // moving = true
+                                // dirMov = "up"
+                                // idBoxMov = idBox
+                                // outOfBounds = false
+                                // unableToPress = true
+                                yChar -= L
+                                box.yBox -= L
+                                checkBoxesOnSpots(idBox, xBoxPos, yBoxPos - 1)
+                                break
+                            }
+                            break
+                        } else if (idBox == 0) {
+                            // moving = true
+                            // dirMov = "up"
+                            // idBoxMov = idBox
+                            // outOfBounds = false
+                            // unableToPress = true
+                            yChar -= L
+                            break
+                        }
                     }
                 }
+                dir = 1
+                pos = 0
             }
-        }
 
-        //tecla "espaço"
-        if (e.keyCode == "32") {
-            nBoxesOnSpot = 0
-            boxes = []
-            createBoxes()
-            playAgain()
-        }
-        if (e.key == "ArrowLeft" || e.keyCode == "65") {
-            char.src = spriteRight
-        }
-        if (e.key == "ArrowRight" || e.keyCode == "68") {
-            char.src = spriteLeft
-        }
-        if (e.key == "ArrowUp" || e.keyCode == "87") {
-            char.src = spriteUp
-        }
-        if (e.key == "ArrowDown" || e.keyCode == "83") {
-            char.src = spriteDown
+            //tecla "seta para esquerda" ou tecla "A"
+            if (e.key == "ArrowLeft" || e.keyCode == "65") {
+                for (const box of boxes) {
+                    for (const box of boxes) {
+                        if (box.level == level) {
+                            if (xChar - L == box.xBox && yChar == box.yBox && box.level === level) {
+                                isTouching = true
+                                idBox = box.id
+                                break
+                            }
+                        }
+                    }
+                    if (maps[level - 1].map[yCharPos][xCharPos - 1] != 1) {
+                        if (isTouching && box.id == idBox && boxesColision(box.xBox - L, box.yBox)) {
+                            let xBoxPos = box.xBox / 50
+                            let yBoxPos = box.yBox / 50
+                            if (maps[level - 1].map[yBoxPos][xBoxPos - 1] != 1) {
+                                // moving = true
+                                // dirMov = "left"
+                                // idBoxMov = idBox
+                                // outOfBounds = false
+                                // unableToPress = true
+                                xChar -= L
+                                box.xBox -= L
+                                checkBoxesOnSpots(idBox, xBoxPos - 1, yBoxPos)
+                                break
+                            }
+                            break
+                        } else if (idBox == 0) {
+                            // moving = true
+                            // dirMov = "left"
+                            // idBoxMov = idBox
+                            // outOfBounds = false
+                            // unableToPress = true
+                            xChar -= L
+                            break
+                        }
+                    }
+                }
+                dir = 3
+                pos = 0
+            }
+
+            //tecla "seta para direita" ou tecla "D"
+            if (e.key == "ArrowRight" || e.keyCode == "68") {
+                for (const box of boxes) {
+                    for (const box of boxes) {
+                        if (xChar + L == box.xBox && yChar == box.yBox && box.level === level) {
+                            isTouching = true
+                            idBox = box.id
+                            break
+                        }
+                    }
+                    if (maps[level - 1].map[yCharPos][xCharPos + 1] != 1) {
+                        if (isTouching && box.id == idBox && boxesColision(box.xBox + L, box.yBox)) {
+                            let xBoxPos = box.xBox / 50
+                            let yBoxPos = box.yBox / 50
+                            if (maps[level - 1].map[yBoxPos][xBoxPos + 1] != 1) {
+                                // moving = true
+                                // dirMov = "right"
+                                // idBoxMov = idBox
+                                // outOfBounds = false
+                                // unableToPress = true
+                                xChar += L
+                                box.xBox += L
+                                checkBoxesOnSpots(idBox, xBoxPos + 1, yBoxPos)
+                                break
+                            }
+                            break
+                        } else if (idBox == 0) {
+                            // moving = true
+                            // dirMov = "right"
+                            // idBoxMov = idBox
+                            // outOfBounds = false
+                            // unableToPress = true
+                            xChar += L
+                            break
+                        }
+                    }
+                }
+                dir = 2
+                pos = 0
+            }
+
+            //tecla "espaço"
+            if (e.keyCode == "32") {
+                nBoxesOnSpot = 0
+                boxes = []
+                createBoxes()
+                playAgain()
+            }
         }
     })
+
+    // function playerMovement(direction, boxId) {
+    //     if (moving && outOfBounds == false) {
+    //         if (posMov == 2 || posMov == 4 || posMov == 6) {
+    //             pos = 0
+    //         } else if (posMov == 1 || posMov == 5) {
+    //             pos = 1
+    //         } else if (posMov == 3) {
+    //             pos = 2
+    //         }
+    //         if (direction == "up") {
+    //             if (posMov % 2 != 0 && posMov != 1)
+    //                 yChar -= 9
+    //             else
+    //                 yChar -= 8
+    //             if (boxId != 0) {
+    //                 if (posMov % 2 != 0 && posMov != 1)
+    //                     boxes[boxId - 1].yBox -= 9
+    //                 else
+    //                     boxes[boxId - 1].yBox -= 8
+    //             }
+    //         }
+    //         if (direction == "down") {
+    //             if (posMov % 2 != 0 && posMov != 1)
+    //                 yChar += 9
+    //             else
+    //                 yChar += 8
+    //             if (boxId != 0) {
+    //                 if (posMov % 2 != 0 && posMov != 1)
+    //                     boxes[boxId - 1].yBox += 9
+    //                 else
+    //                     boxes[boxId - 1].yBox += 8
+    //             }
+    //         }
+    //         if (direction == "left") {
+    //             if (posMov % 2 != 0 && posMov != 1)
+    //                 xChar -= 9
+    //             else
+    //                 xChar -= 8
+    //             if (boxId != 0) {
+    //                 if (posMov % 2 != 0 && posMov != 1)
+    //                     boxes[boxId - 1].xBox -= 9
+    //                 else
+    //                     boxes[boxId - 1].xBox -= 8
+    //             }
+    //         }
+    //         if (direction == "right") {
+    //             if (posMov % 2 != 0 && posMov != 1)
+    //                 xChar += 9
+    //             else
+    //                 xChar += 8
+    //             if (boxId != 0) {
+    //                 if (posMov % 2 != 0 && posMov != 1)
+    //                     boxes[boxId - 1].xBox += 9
+    //                 else
+    //                     boxes[boxId - 1].xBox += 8
+    //             }
+    //         }
+    //         posMov += 1
+    //         if (posMov == 7) {
+    //             moving = false
+    //             posMov = 1
+    //             outOfBounds = true
+    //             unableToPress = false
+    //         }
+    //         console.log(yChar);
+    //         console.log(xChar);
+    //     }
+    // }
 }
 
 playAgain()
@@ -319,20 +447,20 @@ function checkBoxesOnSpots(boxId, x, y) {
                     }
                     box.onSpot = true
                     box.boxType = normalBoxOnSpot
-                } else if (box.onSpot) {
+                } else if (box.onSpot && maps[level - 1].map[y][x] != 2) {
                     box.boxType = normalBox
                     box.onSpot = false
                     nBoxesOnSpot--
                 }
             }
             if (box.boxType == blueBox || box.boxType == blueBoxOnSpot) {
-                if (maps[level - 1].map[y][x] === 6) {
+                if (maps[level - 1].map[y][x] === 3) {
                     if (box.onSpot == false) {
                         nBoxesOnSpot++
                     }
                     box.onSpot = true
                     box.boxType = blueBoxOnSpot
-                } else if (box.onSpot) {
+                } else if (box.onSpot && maps[level - 1].map[y][x] != 3) {
                     box.boxType = blueBox
                     box.onSpot = false
                     nBoxesOnSpot--
@@ -343,6 +471,9 @@ function checkBoxesOnSpots(boxId, x, y) {
     console.log(nBoxesOnSpot);
 
     if (nBoxesOnSpot === sum.length) {
+        nBoxesOnSpot = 0
+        // moving = false
+        sessionStorage.setItem("level", level)
         levelPassed()
     }
 }

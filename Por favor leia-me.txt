@@ -1,0 +1,8 @@
+Teclas:
+Seta cima/W - mover para cima
+Seta baixo/S - mover para baixo
+Seta esquerda/A - mover para a esquerda
+Seta direita/D - mover para a direita
+Space - recomeçar fase
+
+Nota: Existe um bug no jogo, cujo qual não conseguimos encontrar maneira de o resolver, que tem vezes que o utilizador move caixas mesmo sem sequer estar perto delas, não sabemos o porque disto mas é principalmente visível no nível 2, sendo que é o ultimo criado pois não precisamos de mais níveis para testar se o programa esta a correr como pretendido (coisa que não está)
