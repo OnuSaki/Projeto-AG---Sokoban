@@ -1,4 +1,4 @@
-export class Box {
+export default class Box {
     constructor(id, level, boxType, xBox, yBox, L, onSpot) {
         this.id = id
         this.level = level

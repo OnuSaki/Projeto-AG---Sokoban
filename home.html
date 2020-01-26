@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Sokoban</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/sokoban.css">
+</head>
+
+<body>
+    <div class="container position-relative d-flex justify-content-center align-items-center pt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 pt-5 d-flex justify-content-center">
+                <svg width="555px" height="200px">
+                    <defs>
+                        <linearGradient id="gradMarioEdition" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#E6280F;stop-opacity:1" />
+                            <stop offset="57%" style="stop-color:#E6280F;stop-opacity:1" />
+                            <stop offset="57%" style="stop-color:#46AF37;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#46AF37;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <text x="50%" y="50%" text-anchor="middle" font-size="12rem" fill="white"
+                        alignment-baseline="central" class="text">SOKOBAN</text>
+                    <text x="50%" y="80%" text-anchor="middle" font-size="2rem" fill="url(#gradMarioEdition)"
+                        alignment-baseline="central" class="editionTxt">SUPER MARIO EDITION - LUIGI VERSION</text>
+                </svg>
+            </div>
+            <div class="row pt-5" id="rowButtons"></div>
+            <div class="row pt-5" style="color: rgba(255,255,255,0.25)">
+                Note: If you feel the game is starting to lag please or blocks move randomly press F5, it should fix itself. Sorry for the inconvenience!
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <script>
+        let noSaveGame = true
+        let level = 0
+        let buttons = ""
+
+        if (JSON.parse(localStorage.getItem("level"))) {
+            noSaveGame = false
+            level = JSON.parse(localStorage.getItem("level"))
+        } else {
+            noSaveGame = true
+        }
+        let rowButtons = document.querySelector("#rowButtons")
+
+        if (noSaveGame == true || level == 1) {
+            buttons += `<div class="col-12 text-center">
+                    <button type="button" disabled class="btn disabled">CONTINUE</button>
+                </div>
+                <div class="col-12 text-center pt-5">
+                    <a href="/html/sokoban.html">
+                        <button type="button" class="btn">NEW GAME</button>
+                    </a>
+                </div>
+                <div class="col-12 text-center pt-5">
+                    <button type="button" class="btn" data-toggle="modal" data-target="#modalControls">CONTROLS</button>
+                </div>`
+        } else {
+            buttons += `<div class="col-12 text-center">
+                    <a href="/html/sokoban.html">
+                        <button type="button" class="btn">CONTINUE</button>
+                    </a>
+                </div>
+                <div class="col-12 text-center pt-5">
+                    <a href="/html/sokoban.html" onclick="startNewGame()">
+                        <button type="button" class="btn">NEW GAME</button>
+                    </a>
+                </div>
+                <div class="col-12 text-center pt-5">
+                    <button type="button" class="btn" data-toggle="modal" data-target="#modalControls">CONTROLS</button>
+                </div>`
+        }
+
+        buttons += `<div class="modal fade modalPos" id="modalControls" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <button type="button" class="close d-flex flex-row-reverse pr-3 pt-2" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-12 d-flex justify-content-center align-items-center">
+                                            <h5 class="modal-title">CONTROLS</h5>
+                                        </div>
+                                        <div class="col-12 d-flex d-inline-block justify-content-center align-items-center">
+                                            <img class="arrowControl" src="img/arrow_up.png" />
+                                            <p class="pt-3 pl-4">or</p>
+                                            <h2 class="pt-2 pl-4">W</h2>
+                                            <p class="pt-3 pl-4">Move Up</p>
+                                        </div>
+                                        <div class="col-12 d-flex d-inline-block justify-content-center align-items-center">
+                                            <img class="arrowControl" src="img/arrow_down.png" />
+                                            <p class="pt-3 pl-4">or</p>
+                                            <h2 class="pt-2 pl-4">S</h2>
+                                            <p class="pt-3 pl-4">Move Down</p>
+                                        </div>
+                                        <div class="col-12 d-flex d-inline-block justify-content-center align-items-center">
+                                            <img class="arrowControl" src="img/arrow_left.png" />
+                                            <p class="pt-3 pl-4">or</p>
+                                            <h2 class="pt-2 pl-4">A</h2>
+                                            <p class="pt-3 pl-4">Move Left</p>
+                                        </div>
+                                        <div class="col-12 d-flex d-inline-block justify-content-center align-items-center">
+                                            <img class="arrowControl" src="img/arrow_right.png" />
+                                            <p class="pt-3 pl-4">or</p>
+                                            <h2 class="pt-2 pl-4">D</h2>
+                                            <p class="pt-3 pl-4">Move Right</p>
+                                        </div>
+                                        <div class="col-12 d-flex d-inline-block justify-content-center align-items-center">
+                                            <h2 class="pt-2 pl-4">SPACE</h2>
+                                            <p class="pt-3 pl-4">Reset Level</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+
+        rowButtons.innerHTML = buttons
+
+        function startNewGame() {
+            localStorage.setItem("level", JSON.stringify(1))
+        }
+    </script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>
